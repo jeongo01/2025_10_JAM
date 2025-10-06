@@ -90,13 +90,13 @@ public class Main {
 				List<Article> articles = new ArrayList<>();
 
 				try {
-					Class.forName("com.mysql.jdbc.Driver");
+					Class.forName("com.mysql.cj.jdbc.Driver");
 					String url = "jdbc:mysql://127.0.0.1:3306/JAM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 
 					conn = DriverManager.getConnection(url, "root", "");
 
 					String sql = "SELECT * FROM article";
-					sql += "ORDER BY id DESC;";
+					sql += " ORDER BY id DESC;";
 
 					pstmt = conn.prepareStatement(sql);
 					rs = pstmt.executeQuery(sql);
@@ -157,7 +157,59 @@ public class Main {
 					System.out.printf("%d	|	%s\n", article.id, article.title);
 				}
 
-			} else {
+			} else if(cmd.startsWith("article modify ")) {
+				
+				System.out.println(" ==게시물 수정== ");
+				
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+				
+				System.out.printf("수정할 제목 : ");
+				String title = sc.nextLine().trim();
+				System.out.printf("수정할 내용 : ");
+				String body = sc.nextLine().trim();
+				
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JAM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					
+					String sql = "UPDATE article";
+					sql += " SET updateDate = NOW()";
+					sql += ", title = '" + title + "'";
+					sql += ", `body` = '" + body + "'";
+					sql += " WHERE id = " + id + ";";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.executeUpdate();
+				}
+				catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				}
+				catch (SQLException e) {
+					System.out.println("에러 : " + e);
+				}
+				try {
+					if (pstmt != null && !pstmt.isClosed()) {
+						pstmt.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				try {
+					if (conn != null && !conn.isClosed()) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			
+			}
+			
+			else {
 				System.out.println("존재하지 않는 명령어 입니다");
 			}
 		}
