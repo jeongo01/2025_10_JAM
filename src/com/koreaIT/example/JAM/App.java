@@ -133,6 +133,32 @@ public class App {
 					}
 				}
 				
+				else if (cmd.startsWith("article detail ")) {
+
+					int id = Integer.parseInt(cmd.split(" ")[2]);
+					
+					SecSql sql = SecSql.from("SELECT * FROM article"); // 준비하는 과정
+					sql.append("WHERE id = ?", id);
+
+					Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+					
+					if (articleMap.isEmpty()) {
+						System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+						continue;
+					}
+					
+					Article article = new Article(articleMap);
+
+					System.out.printf(" == %d번 게시물 상세보기 == \n", id);
+					
+					System.out.printf("번호 : %d\n", article.id);
+					System.out.printf("작성일 : %s\n", article.regDate);
+					System.out.printf("수정일 : %s\n", article.updateDate);
+					System.out.printf("제목 : %s\n", article.title);
+					System.out.printf("내용 : %s\n", article.body);
+					
+				}
+				
 				else if (cmd.startsWith("article modify ")) {
 
 					int id = Integer.parseInt(cmd.split(" ")[2]);
@@ -162,23 +188,31 @@ public class App {
 					
 					DBUtil.update(conn, sql);
 
-//					try {
-//						String sql = "UPDATE article";
-//						sql += " SET updateDate = NOW()";
-//						sql += ", title = '" + title + "'";
-//						sql += ", `body` = '" + body + "'";
-//						sql += " WHERE id = " + id + ";";
-//
-//						pstmt = conn.prepareStatement(sql);
-//						pstmt.executeUpdate();
-//
-//					} catch (SQLException e) {
-//						System.out.println("에러 : " + e);
-//					}
-
 					System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+				}
+				
+				else if (cmd.startsWith("article delete ")) {
 
-				} else {
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+				
+				SecSql sql = SecSql.from("SELECT COUNT(*) FROM article");
+				sql.append("WHERE id = ?", id);
+				
+				int articleCnt = DBUtil.selectRowIntValue(conn, sql);
+						
+				if (articleCnt == 0) {
+					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+					continue;
+				}
+				
+				sql = SecSql.from("DELETE FROM article");
+				sql.append("WHERE id = ?", id);
+				
+				DBUtil.delete(conn, sql);
+
+				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+
+			} else {
 					System.out.println("존재하지 않는 명령어 입니다");
 				}
 			}
