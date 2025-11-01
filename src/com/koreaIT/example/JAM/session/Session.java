@@ -25,4 +25,8 @@ public class Session {
 		loginedMember = null;
 	}
 	
+	public static Member getLoginedMember() {
+		return loginedMember;
+	}
+	
 }

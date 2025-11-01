@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.koreaIT.example.JAM.dto.Member;
 import com.koreaIT.example.JAM.service.MemberService;
 import com.koreaIT.example.JAM.session.Session;
+import com.koreaIT.example.JAM.util.Util;
 
 public class MemberController {
 	private Scanner sc;
@@ -98,9 +99,11 @@ public class MemberController {
 		String loginId = null;
 		String loginPw = null;
 		
+		System.out.println(" == 로그인 == ");
+		
 		while(true) {
 			
-			System.out.printf("아이디 : ");
+			System.out.printf("로그인 아이디 : ");
 			loginId = sc.nextLine().trim();
 			
 			if(loginId.length() == 0) {
@@ -108,7 +111,7 @@ public class MemberController {
 				continue;
 			}
 			
-			System.out.printf("비밀번호 : ");
+			System.out.printf("로그인 비밀번호 : ");
 			loginPw = sc.nextLine().trim();
 			
 			if(loginPw.length() == 0) {
@@ -147,4 +150,18 @@ public class MemberController {
 		System.out.println("로그아웃 되셨습니다.");
 	}
 
-}
+	public void showProfile() {
+		if(Session.isLogined() == false) {
+			System.out.println("로그인 후에 이용해주세요.");
+			return;
+		}
+		
+		System.out.println("== 마이페이지 ==");
+		System.out.printf("가입일 : %s", Util.datetimeFormat(Session.getLoginedMember().regDate));
+		System.out.printf("수정일 : %s", Util.datetimeFormat(Session.getLoginedMember().updateDate));
+		System.out.printf("로그인 아이디 : %s", Session.getLoginedMember().loginId);
+		System.out.printf("이름 : %s", Session.getLoginedMember().name);
+		
+		}
+		
+	}
