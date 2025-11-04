@@ -29,4 +29,8 @@ public class Session {
 		return loginedMember;
 	}
 	
+	public static int getLoginedMemberId() {
+		return loginedMemberId;
+	}
+	
 }
