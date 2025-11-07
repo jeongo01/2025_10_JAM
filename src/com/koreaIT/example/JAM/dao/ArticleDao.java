@@ -77,4 +77,11 @@ public class ArticleDao {
 		return DBUtil.selectRowIntValue(conn, sql);
 	}
 
+	public Map<String, Object> getArticleById(int id) {
+		SecSql sql = SecSql.from("SELECT * FROM article");
+		sql.append("WHERE id = ?", id);
+		
+		return DBUtil.selectRow(conn, sql);
+	}
+
 }
