@@ -20,7 +20,7 @@ public class MemberController {
 	public void doJoin() {
 		
 		if (Session.isLogined()) {
-			System.out.printf("로그아웃 후에 이용해주세요.");
+			System.out.println("로그아웃 후에 이용해주세요.");
 			return;
 		}
  
@@ -130,6 +130,9 @@ public class MemberController {
 				System.out.println("비밀번호가 일치하지 않습니다.");
 				continue;
 			}
+			
+			System.out.println("로그인된 memberId: " + member.id);  // ← 확인용 출력
+
 			
 			Session.login(member);
 			

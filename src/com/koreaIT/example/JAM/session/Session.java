@@ -7,8 +7,8 @@ public class Session {
 	private static Member loginedMember;
 	
 	static {
-		int loginedMemberId = -1;
-		Member loginedMember = null;
+		loginedMemberId = -1;
+		loginedMember = null;
 	}
 	
 	public static void login(Member member) {

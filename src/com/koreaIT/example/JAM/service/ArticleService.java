@@ -17,6 +17,7 @@ public class ArticleService {
 	}
 
 	public int doWrite(int memberId, String title, String body) {
+		System.out.println("Service에 전달된 memberId: " + memberId);
 		return articleDao.doWrite(memberId, title, body);
 	}
 
