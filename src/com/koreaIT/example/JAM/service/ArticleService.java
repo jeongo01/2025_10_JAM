@@ -17,13 +17,12 @@ public class ArticleService {
 	}
 
 	public int doWrite(int memberId, String title, String body) {
-		System.out.println("Service에 전달된 memberId: " + memberId);
 		return articleDao.doWrite(memberId, title, body);
 	}
 
-	public List<Article> showList() {
+	public List<Article> showList(String searchKeyword) {
 		
-		List<Map<String, Object>> articleListMap = articleDao.showList();
+		List<Map<String, Object>> articleListMap = articleDao.showList(searchKeyword);
 		
 		List<Article> articles = new ArrayList<>();
 

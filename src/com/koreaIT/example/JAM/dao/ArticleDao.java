@@ -22,17 +22,19 @@ public class ArticleDao {
 		sql.append(", memberId = ?", memberId);
 		sql.append(", title = ?", title);
 		sql.append(", `body` = ?", body);
-		System.out.println("DAO insert memberId: " + memberId);
 
 		return DBUtil.insert(conn, sql);
 	}
 
-	public List<Map<String, Object>> showList() {
+	public List<Map<String, Object>> showList(String searchKeyword) {
 		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
 		sql.append("FROM article AS a");
 		sql.append("INNER JOIN `member` AS m");
 		sql.append("ON a.memberId = m.id");
 		
+		if(searchKeyword.length() > 0) {
+			sql.append("WHERE a.title LIKE CONCAT('%', ?, '%')", searchKeyword);
+		}
 		sql.append("ORDER BY a.id DESC");
 
 		return DBUtil.selectRows(conn, sql);
@@ -44,7 +46,6 @@ public class ArticleDao {
 		sql.append("FROM article AS a");
 		sql.append("INNER JOIN `member` AS m");
 		sql.append("ON a.memberId = m.id");
-		
 		sql.append("WHERE a.id = ?", id);
 		
 		return DBUtil.selectRow(conn, sql);
@@ -53,7 +54,6 @@ public class ArticleDao {
 	public void doModify(String title, String body, int id) {
 		SecSql sql = SecSql.from("SELECT COUNT(*) FROM article");
 		sql.append("WHERE id = ?", id);
-		
 		sql = SecSql.from("UPDATE article");
 		sql.append("SET updateDate = NOW()");
 		sql.append(", title = ?", title);
